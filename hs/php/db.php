@@ -120,7 +120,157 @@ break;
       $ts=$dbArr["ts"];/*echo $ts;*/
       if(!empty($dbArr["tss"])){    
         TS($dbArr["ts"]);   
-      }   	return $dbArr;  	break;  	case "zj":/*修改*/   	$dbArr=dbZuiJia($dbArr);   	$ts=$dbArr["ts"];/*echo $ts;*/   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;     	case "djl":/*修改*/   	$sql=$dbArr["sql"];   	if($dbArr["sql"]!=""){    	$dbArr=dbRead($dbArr);    	if(!empty($dbArr["arr"])){     	$dbArr["sql"]=$sql;     	$dbArr=dbDjl($dbArr);    	}else{     	$dbArr=dbAdd($dbArr);    	}   	}       	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}       	return $dbArr;  	break;     	case "tjxg":/*添加修改*/   	$sql=$dbArr["sql"];   	if($dbArr["sql"]!=""){    	$dbArr=dbRead($dbArr);    	if(!empty($dbArr["arr"])){     	$dbArr["sql"]=$sql;     	$dbArr=dbUpdata($dbArr);    	}else{     	$dbArr=dbAdd($dbArr);    	}   	}else{    	$dbArr=dbAdd($dbArr);   	}   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;        	case "tjkv":   	$dbArr=dbRead($dbArr);   	if(empty($dbArr["arr"])){    	$dbArr=dbAdd($dbArr);    	$dbArr["ts"]="操作成功";   	}else{    	$dbArr["ts"]="不能重复添加";   	}       	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;        	case "read":/*读取*/   	$dbArr=dbRead($dbArr);   	$dbArr["ts"]="操作成功";   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;     	case "readfy":/*读取*/   	$dbArr["sql"]=$dbArr["sql"]." limit ".$dbArr["len"]." offset ".$dbArr["start"];   	$dbArr=dbRead($dbArr);   	$dbArr["ts"]="操作成功";   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;        	case "select":/*读取*/   	$dbArr=dbSelect($dbArr);   	$dbArr["ts"]="操作成功";   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;        	case "del":/*删除*/   	$dbArr=dbDel($dbArr);   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	$dbArr["arr"]=array();   	return $dbArr;  	break;     	case "clear":/*删除表*/   	$dbArr=dbDelTable($dbArr);   	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;        	case "djl":/*点击率*/   	$sql=$dbArr["sql"];   	$dbArr=dbRead($dbArr);   	$dbArr["sql"]=$sql;   	$data=$dbArr["data"];   	$ar=$dbArr["arr"];       	if(!empty($ar)){    	foreach($ar as $num=>$Item){     	foreach($data as $key=>$val){      	$val_db=$Item[$key]+$val;      	$data_db[$key]=$val_db;     	}    	}    	$dbArr["data"]=$data_db;    	$dbArr=dbUpdata($dbArr);   	}       	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}   	return $dbArr;  	break;  	case "login":/*登录*/   	$dbArr=dbRead($dbArr);    	$ar=$dbArr["arr"];       	if(!empty($ar)){    	$dbArr["ts"]="操作成功";    	//pr($ar);    	$_SESSION["un"]=$ar[0]["t1"];    	$_SESSION["uid"]=$ar[0]["n45"];    	$_SESSION["jiBie"]=$ar[0]["n4"];   	}else{    	$dbArr["ts"]="操作失败";   	}       	if(!empty($dbArr["tss"])){    	TS($dbArr["ts"]);   	}    	return $dbArr;  	break; 	}
+      }   	
+      return $dbArr;  	
+      break;
+    
+    case "zj":
+      $dbArr=dbZuiJia($dbArr); 
+      $ts=$dbArr["ts"];/*echo $ts;*/   
+      if(!empty($dbArr["tss"])){ 
+        TS($dbArr["ts"]); 
+      }  
+      return $dbArr;
+      break; 
+    
+    case "djl":/*修改*/   
+      $sql=$dbArr["sql"]; 
+      if($dbArr["sql"]!=""){  
+        $dbArr=dbRead($dbArr); 
+        if(!empty($dbArr["arr"])){  
+          $dbArr["sql"]=$sql; 
+          $dbArr=dbDjl($dbArr); 
+        }else{  
+          $dbArr=dbAdd($dbArr); 
+        } 
+      }  
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]);
+      } 
+      return $dbArr;  
+      break; 
+    
+    case "tjxg":/*添加修改*/  
+      $sql=$dbArr["sql"]; 
+      if($dbArr["sql"]!=""){
+        $dbArr=dbRead($dbArr);  
+        if(!empty($dbArr["arr"])){  
+          $dbArr["sql"]=$sql; 
+          $dbArr=dbUpdata($dbArr); 
+        }else{  
+          $dbArr=dbAdd($dbArr); 
+        }
+      }else{
+        $dbArr=dbAdd($dbArr); 
+      }  
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]);  
+      }   
+      return $dbArr; 
+      break;
+    
+    case "tjkv": 
+      $dbArr=dbRead($dbArr); 
+      if(empty($dbArr["arr"])){ 
+        $dbArr=dbAdd($dbArr); 
+        $dbArr["ts"]="操作成功";  
+      }else{
+        $dbArr["ts"]="不能重复添加";  
+      } 
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]);  
+      }  
+      return $dbArr; 
+      break;
+    
+    
+    case "read":/*读取*/  
+      $dbArr=dbRead($dbArr); 
+      $dbArr["ts"]="操作成功"; 
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]); 
+      }
+      return $dbArr; 
+      break; 
+    
+    case "readfy":/*读取*/ 
+      $dbArr["sql"]=$dbArr["sql"]." limit ".$dbArr["len"]." offset ".$dbArr["start"]; 
+      $dbArr=dbRead($dbArr); 
+      $dbArr["ts"]="操作成功"; 
+      if(!empty($dbArr["tss"])){ 
+        TS($dbArr["ts"]);  
+      }  
+      return $dbArr;  
+      break;
+    
+    
+    case "select":/*读取*/  
+      $dbArr=dbSelect($dbArr); 
+      $dbArr["ts"]="操作成功"; 
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]); 
+      }   
+      return $dbArr; 
+      break;
+    
+    
+    case "del":/*删除*/   
+      $dbArr=dbDel($dbArr); 
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]); 
+      }
+      $dbArr["arr"]=array(); 
+      return $dbArr;  
+      break;
+    
+    case "clear":/*删除表*/  
+      $dbArr=dbDelTable($dbArr); 
+      if(!empty($dbArr["tss"])){  
+        TS($dbArr["ts"]);  
+      }  
+      return $dbArr;  
+      break;
+    
+    
+    case "djl":/*点击率*/  
+      $sql=$dbArr["sql"]; 
+      $dbArr=dbRead($dbArr); 
+      $dbArr["sql"]=$sql; 
+      $data=$dbArr["data"]; 
+      $ar=$dbArr["arr"];  
+      if(!empty($ar)){  
+        foreach($ar as $num=>$Item){ 
+          foreach($data as $key=>$val){ 
+            $val_db=$Item[$key]+$val;
+            $data_db[$key]=$val_db; 
+          }
+        }
+        $dbArr["data"]=$data_db; 
+        $dbArr=dbUpdata($dbArr); 
+      } 
+      if(!empty($dbArr["tss"])){ 
+        TS($dbArr["ts"]); 
+      }
+      return $dbArr; 
+      break; 
+    
+    
+    case "login":/*登录*/  
+      $dbArr=dbRead($dbArr); 
+      $ar=$dbArr["arr"];   
+      if(!empty($ar)){  
+        $dbArr["ts"]="操作成功";  
+         	$_SESSION["un"]=$ar[0]["t1"];    	
+        $_SESSION["uid"]=$ar[0]["n45"];    	
+        $_SESSION["jiBie"]=$ar[0]["n4"];   	
+      }else{    	
+        $dbArr["ts"]="操作失败";   	
+      }       	
+      if(!empty($dbArr["tss"])){    
+        TS($dbArr["ts"]);   	
+      }    	return $dbArr;  
+      break; 	
+  }
 } 
 /*######################### 	获取数据库表
 ###########################*/
