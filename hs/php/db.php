@@ -568,27 +568,84 @@ function dbReplace($dbArr){
   }
   $dbArr["sqlDo"]=$sql; 
   $ret = dbExec($dbArr);  
-  if ($ret)   	{     	$dbArr["ts"]='操作成功';   	}  else  {     	$dbArr["ts"]='操作失败';   	}    	dbClose($dbArr);  	return $dbArr;
+  if ($ret)   	{    
+    $dbArr["ts"]='操作成功';  
+  }  else  {   
+    $dbArr["ts"]='操作失败';  
+  }    	
+  dbClose($dbArr);  
+  return $dbArr;
 } 
-function dbRead($dbArr){ 	$dbArr=dbCreate($dbArr); 	dbTable($dbArr); 	//$dbArr=dbOpen($dbArr); 	$db=$dbArr["db"];/*打开数据库*/  	$tableName=$dbArr["tableName"];  	$sql=$dbArr["sql"];  	$data="";   	if(!empty($dbArr["data"])){    	$data=$dbArr["data"];  	}  	if(empty($dbArr["sql"])){  	$sql="SELECT * from ".$dbArr["tableName"]; 	}else{  	$sql="SELECT * from ".$dbArr["tableName"]." where ".$dbArr["sql"];  	}   	$dbArr["sql"]=$sql; 	$ret = dbQuery($dbArr); 
+
+
+
+function dbRead($dbArr){ 
+  $dbArr=dbCreate($dbArr); 
+  dbTable($dbArr); 
+  //$dbArr=dbOpen($dbArr); 
+  $db=$dbArr["db"];/*打开数据库*/  
+  $tableName=$dbArr["tableName"]; 
+  $sql=$dbArr["sql"];  
+  $data="";   
+  if(!empty($dbArr["data"])){  
+    $data=$dbArr["data"]; 
+  }  	
+  if(empty($dbArr["sql"])){  
+    $sql="SELECT * from ".$dbArr["tableName"]; 
+  }else{  	
+    $sql="SELECT * from ".$dbArr["tableName"]." where ".$dbArr["sql"];  
+  }   
+  $dbArr["sql"]=$sql; 
+  $ret = dbQuery($dbArr); 
 if($dbArr["dbType"]==2){
-while($row = $ret->fetch(PDO::FETCH_ASSOC)){     $dbArr["arr"][]=$row;
+while($row = $ret->fetch(PDO::FETCH_ASSOC)){   
+  $dbArr["arr"][]=$row;
 }
-}else{ 	while($row = $ret->fetchArray(SQLITE3_ASSOC) ){  	if($row["t44"]=="用户"){   	$row["t2"]=strD($row["t2"]);   	$row["t3"]=strD($row["t3"]);      	if(!empty($dbArr["isTB"])&&$dbArr["isTB"]==1){    	$row["t2"]="";    	$row["t3"]="";   	}  	}  	$dbArr["arr"][]=$row; 	}
-}   	dbClose($dbArr); 	return $dbArr;
+}else{ 	
+  while($row = $ret->fetchArray(SQLITE3_ASSOC) ){  
+    if($row["t44"]=="用户"){  
+      $row["t2"]=strD($row["t2"]);  
+      $row["t3"]=strD($row["t3"]);    
+      if(!empty($dbArr["isTB"])&&$dbArr["isTB"]==1){  
+        $row["t2"]="";    
+        $row["t3"]="";   
+      }  
+    }  
+    $dbArr["arr"][]=$row; 	
+  }
+}   
+  dbClose($dbArr); 	return $dbArr;
 }
+
+
 function dbQuerytb($dbArr){
 if($dbArr["dbType"]==1){
-return $dbArr["db"]->query($dbArr["sqltb"]);
+  return $dbArr["db"]->query($dbArr["sqltb"]);
 }
 if($dbArr["dbType"]==2){ 
-$ret=$dbArr["db"]->query($dbArr["sqltb"]);
-return $ret;
+  $ret=$dbArr["db"]->query($dbArr["sqltb"]);
+  return $ret;
 }
 }
-function dbQuery($dbArr){ 	if($dbArr["dbType"]==1){  	return $dbArr["db"]->query($dbArr["sql"]); 	}
-if($dbArr["dbType"]==2){  	return $dbArr["db"]->query($dbArr["sql"]); 	}
+
+
+
+
+
+
+function dbQuery($dbArr){ 	
+  if($dbArr["dbType"]==1){  
+    return $dbArr["db"]->query($dbArr["sql"]); 	
+  }
+if($dbArr["dbType"]==2){  
+  return $dbArr["db"]->query($dbArr["sql"]); 
 }
+}
+
+
+
+
+
 function dbJiBie($a)
 {
 $id=$a[0];
@@ -596,36 +653,176 @@ $jibie=$a[1];
 $dbjs=dbq(array("tableName"=>"yh","sql"=>"t44='yh' and n45=".$id,"tss"=>"","method"=>"xg","data"=>array("n4"=>$jibie)));
 return $dbjs;
 } 
-/*######################### 	获取数据库表
+
+
+
+
+
+
+
+/*######################### 	
+获取数据库表
 ###########################*/
 function dbGetTables($dbArr)
-{ 	//$db=$dbArr["db"]; 	$dbArr["sqltb"]='SELECT  *   FROM sqlite_master WHERE type="table" and name="'.$dbArr["tableName"].'"'; 	//$dbArr["sqltb"]=$sql; 	//$ret=$db->exec($sql);
+{ 
+  //$db=$dbArr["db"]; 
+  $dbArr["sqltb"]='SELECT  *   FROM sqlite_master WHERE type="table" and name="'.$dbArr["tableName"].'"'; 	
+  //$dbArr["sqltb"]=$sql; 	
+  //$ret=$db->exec($sql);
 $dbArr["arrt"]=array();  
 if($dbArr["dbType"]==2){
 $res = $dbArr["db"]->query($dbArr["sqltb"]); 
 $res->setFetchMode(PDO::FETCH_NUM);
-while($row = $res->fetch()){     $dbArr["arrt"][] = $row;
+while($row = $res->fetch()){    
+  $dbArr["arrt"][] = $row;
 }
 /*
 while($row = $res->fetch(\PDO::FETCH_ASSOC)){    $dbArr["arrt"][] = $row;
 }
 */
 }else{
-$ret = dbQuerytb($dbArr);  	while($row = $ret->fetchArray(SQLITE3_ASSOC) ){  	$dbArr["arrt"][]=$row; 	}
+$ret = dbQuerytb($dbArr);  
+  while($row = $ret->fetchArray(SQLITE3_ASSOC) ){  	
+    $dbArr["arrt"][]=$row;
+  }
 } 	return $dbArr;
 } 
-function dbExec($dbArr){ 	//if($dbArr["dbType"]==1){  	return $dbArr["db"]->exec($dbArr["sqlDo"]); 	//}
+
+
+
+
+function dbExec($dbArr){ 	
+  //if($dbArr["dbType"]==1){  
+  return $dbArr["db"]->exec($dbArr["sqlDo"]); 
+  //}
 }
+
+
+
+
+
+
+
 /*修改记录*/
-function dbDjl($dbArr){ 	/*db_create_table($dbArr);*/ 	$dbArr=dbCreate($dbArr); 	dbTable($dbArr); 	//$dbArr=dbOpen($dbArr); 	$db=$dbArr["db"];/*打开数据库*/  	$tableName=$dbArr["tableName"];  	$sql=$dbArr["sql"]; 	$data=$dbArr["data"]; 	$str=''; 	//-------------------------------------------- 	foreach($data as $key=>$val){    	if(searchText(array("t",$key))){      	$dbArr["ts"]="不能修改字符串字段。";    	}else{    	if($val==""){    	$dbArr["ts"]="不能空白";   	}   	else   	{    	$str.=$key."=".$val."+".$key.",";    	}   	}  	}   	if(empty($data["n42"])){   	$data["n42"]=time()*1000; 	} 	$str.="n42=".$data["n42"]; 	//$str=substr($str,0,strlen($str)-1);  	$str=" set ".$str;   	if($dbArr["sql"]!=""){    	$sql=" UPDATE ".$dbArr["tableName"].$str." where ".$sql; 	}else{  	$sql=" UPDATE ".$dbArr["tableName"].$str; 	} 	//print_r($sql); 	$dbArr["sqlDo"]=$sql; 	$ret = dbExec($dbArr);    	if ($ret)   	{     	$dbArr["ts"]='操作成功';   	}  else  {     	$dbArr["ts"]='操作失败';   	}    	dbClose($dbArr);  	return $dbArr;
+function dbDjl($dbArr){ 	
+  /*db_create_table($dbArr);*/ 	
+  $dbArr=dbCreate($dbArr); 
+  dbTable($dbArr); 	
+  //$dbArr=dbOpen($dbArr); 	
+  $db=$dbArr["db"];/*打开数据库*/  
+  $tableName=$dbArr["tableName"];  
+  $sql=$dbArr["sql"]; 	
+  $data=$dbArr["data"]; 	
+  $str=''; 	
+  //-------------------------------------------- 	
+  foreach($data as $key=>$val){   
+    if(searchText(array("t",$key))){    
+      $dbArr["ts"]="不能修改字符串字段。";  
+    }else{    
+      if($val==""){    
+        $dbArr["ts"]="不能空白";  
+      }   	else   	{   
+        $str.=$key."=".$val."+".$key.",";  
+      }   
+    
+    }  
+  }   	
+  if(empty($data["n42"])){  
+    $data["n42"]=time()*1000; 
+  } 	
+  $str.="n42=".$data["n42"]; 
+  //$str=substr($str,0,strlen($str)-1);  
+  $str=" set ".$str;   	
+  if($dbArr["sql"]!=""){    
+    $sql=" UPDATE ".$dbArr["tableName"].$str." where ".$sql; 	
+  }else{  
+    $sql=" UPDATE ".$dbArr["tableName"].$str; 	
+  } 	
+  //print_r($sql); 
+  $dbArr["sqlDo"]=$sql; 	
+  $ret = dbExec($dbArr);    
+  if ($ret)   	{     
+    $dbArr["ts"]='操作成功';  
+  }  else  {     	
+    $dbArr["ts"]='操作失败';   
+  }    
+  dbClose($dbArr);  	
+  return $dbArr;
 }
-function dbDelTable($dbArr){  	/*dbTable($dbArr);*/ 	$dbArr=dbCreate($dbArr); 	//$dbArr=dbOpen($dbArr);  	$db=$dbArr["db"];/*打开数据库*/  	$tableName=$dbArr["tableName"];  	$sql="DROP TABLE ".$dbArr["tableName"]; 	$dbArr["sqlDo"]=$sql; 	$ret=dbExec($dbArr);      	if($ret){     	$dbArr["ts"]="操作失败";     	} else {      	$dbArr["ts"]="操作成功";     	}   	dbClose($dbArr); 	return $dbArr;
+
+
+
+
+
+function dbDelTable($dbArr){ 
+  /*dbTable($dbArr);*/ 	
+  $dbArr=dbCreate($dbArr); 
+  //$dbArr=dbOpen($dbArr);  
+  $db=$dbArr["db"];/*打开数据库*/  
+  $tableName=$dbArr["tableName"];  
+  $sql="DROP TABLE ".$dbArr["tableName"]; 
+  $dbArr["sqlDo"]=$sql; 	
+  $ret=dbExec($dbArr);    
+  if($ret){     	
+    $dbArr["ts"]="操作失败";  
+  } else {      
+    $dbArr["ts"]="操作成功";   
+  }   
+  dbClose($dbArr); 
+  return $dbArr;
 } 
+
+
+
+
+
+
+
 /*删除*/
-function dbDel($dbArr){ 	$dbArr=dbTable($dbArr); 	$dbArr=dbCreate($dbArr);  	//$dbArr=dbOpen($dbArr); 	$db=$dbArr["db"]; 	$tableName=$dbArr["tableName"]; 	$sql=$dbArr["sql"];  	$data=$dbArr["data"];   	if($sql!=""){    	$dbsql="DELETE from ".$dbArr["tableName"]." where ".$sql;  	$dbArr["sqlDo"]=$dbsql;  	$ret=dbExec($dbArr);      	if($ret){      	$dbArr["ts"]="操作成功";      	}else {      	$dbArr["ts"]="操作失败";      	}  	}else{    	$dbArr["ts"]="sql未配置";  	} 	dbClose($dbArr); 	return $dbArr;
+function dbDel($dbArr){ 	
+  $dbArr=dbTable($dbArr); 	
+  $dbArr=dbCreate($dbArr);  
+  //$dbArr=dbOpen($dbArr); 	
+  $db=$dbArr["db"]; 
+  $tableName=$dbArr["tableName"]; 	
+  $sql=$dbArr["sql"];  
+  $data=$dbArr["data"];   
+  if($sql!=""){   
+    $dbsql="DELETE from ".$dbArr["tableName"]." where ".$sql;  
+    $dbArr["sqlDo"]=$dbsql;  
+    $ret=dbExec($dbArr);      
+    if($ret){      
+      $dbArr["ts"]="操作成功";    
+    }else {    
+      $dbArr["ts"]="操作失败";     
+    }  
+  }else{   
+    $dbArr["ts"]="sql未配置";  
+  } 	
+  dbClose($dbArr); 	
+  return $dbArr;
 }
+
+
+
+
+
+
+
+
 /*创建数据库*/
-function dbCreate($dbArr){    	/*检查数据库文件*/     	//$pin = new pin();  	//$tbn=$pin->Pinyin($dbArr["tableName"],'UTF8');     	if(empty($dbArr["dbName"])){   	//$dbName=$dbArr["dbName"]="data/#appDb.db";   	$dbName=$dbArr["dbName"]="data1/#".$dbArr["tableName"].".db";  	}else{   	$dbName=$dbArr["dbName"];  	}  	/*检查数据库文件*/  	dirFind($dbName);
+function dbCreate($dbArr){   
+  /*检查数据库文件*/     
+  //$pin = new pin(); 
+  //$tbn=$pin->Pinyin($dbArr["tableName"],'UTF8');  
+  if(empty($dbArr["dbName"])){   
+    //$dbName=$dbArr["dbName"]="data/#appDb.db"; 
+    $dbName=$dbArr["dbName"]="data1/#".$dbArr["tableName"].".db";  
+  }else{   
+    $dbName=$dbArr["dbName"];  
+  }  	
+  /*检查数据库文件*/  
+  dirFind($dbName);
 if($dbArr["dbType"]==1){
 $db = new MyDB($dbName);
 }
@@ -635,22 +832,114 @@ else if($dbArr["dbType"]==2)
 $db = new PDO('sqlite:'.$dbName); 
 # 设置数据库编码为utf-8
 $db->exec('set names utf8'); 
-}  	if(!file_exists($dbName)){   	if(!$db){    	echo $db->lastErrorMsg();   	}else{    	echo "打开数据库成功\n";   	}  	}  	$dbArr["db"]=$db;  	return $dbArr;
+}  
+  if(!file_exists($dbName)){  
+    if(!$db){ 
+      echo $db->lastErrorMsg();   
+    }else{   
+      echo "打开数据库成功\n";   
+    } 
+  }  	
+  $dbArr["db"]=$db; 
+  return $dbArr;
 }
-function dbClose($dbArr){ 	if($dbArr["dbType"]==1){  	$dbArr["db"]->close(); 	}
+
+
+
+
+
+
+
+
+
+function dbClose($dbArr){ 
+  if($dbArr["dbType"]==1){  
+    $dbArr["db"]->close(); 
+  }
 } 
+
+
+
+
+
+
+
+
+
+
 /*
 添加记录*/
-function dbAdd($dbArr){ 	$dbArr=dbTable($dbArr); 	$dbArr=dbCreate($dbArr); 	$db=$dbArr["db"]; 	$tableName=$dbArr["tableName"];  	$sql=$dbArr["sql"]; 	//设置时间 	if(empty($data["n42"])){ 	$dbArr["data"]["n42"]=time()*1000; 	} 
+function dbAdd($dbArr){ 
+  $dbArr=dbTable($dbArr); 
+  $dbArr=dbCreate($dbArr); 
+  $db=$dbArr["db"]; 
+  $tableName=$dbArr["tableName"];  
+  $sql=$dbArr["sql"]; 
+  //设置时间 	
+  if(empty($data["n42"])){ 	
+    $dbArr["data"]["n42"]=time()*1000; 
+  } 
 if(empty($dbArr["data"]["n24"])&&!empty($_SESSION["uid"])){
 $dbArr["data"]["n24"]=$_SESSION["uid"];
 }
 if(empty($dbArr["data"]["t43"])&&!empty($_SESSION["un"])){
 $dbArr["data"]["t43"]=$_SESSION["un"];
-}  	$dbArr["data"]["t45"]=date("Y-m-d H:i:s"); 	//数据状态 	$dbArr["data"]["t41"]="已同步"; 	//表名 	$dbArr["data"]["t44"]=$tableName; 	$dbArr["data"]["n39"]=1;//点击率 	$data=$dbArr["data"]; 	for($i=1;$i<=45;$i++){  	$data2["t".$i]="";  	if($i!=45){   	$data2["n".$i]=0;  	} 	}
-foreach($data as $k=>$v){ 	$data2[$k]=strE($v);
-}    	$sqlstr='';  	$sqlstrb='';   	foreach($data2 as $key=>$val){    	if(searchText(array("t",$key))){   	if($tableName=="yh"&&($key=="t2"||$key=="t3")){    	$sqlstr.=$key;    	$sqlstr.=',';    	$sqlstrb.="'".strE($val)."'";    	$sqlstrb.=',';   	}else{    	$sqlstr.=$key;    	$sqlstr.=',';    	$sqlstrb.="'".strE($val)."'";    	$sqlstrb.=',';    	}       	}else{   	$sqlstr.=$key;   	$sqlstr.=',';   	if($val==""){    	$sqlstrb.="0";   	}else{    	$sqlstrb.=$val;   	}   	$sqlstrb.=',';  	} 	} 
+}  	
+  $dbArr["data"]["t45"]=date("Y-m-d H:i:s"); 	
+  //数据状态 	$dbArr["data"]["t41"]="已同步";
+  //表名 	
+  $dbArr["data"]["t44"]=$tableName; 
+  $dbArr["data"]["n39"]=1;//点击率 	
+  $data=$dbArr["data"]; 	
+  for($i=1;$i<=45;$i++){  	
+    $data2["t".$i]="";  	
+    if($i!=45){   
+      $data2["n".$i]=0;  	
+    } 
+  }
+foreach($data as $k=>$v){ 	
+  $data2[$k]=strE($v);
+}    
+  $sqlstr='';  
+  $sqlstrb='';  
+  foreach($data2 as $key=>$val){    
+    if(searchText(array("t",$key))){   
+      if($tableName=="yh"&&($key=="t2"||$key=="t3")){    
+        $sqlstr.=$key;  
+        $sqlstr.=',';   
+        $sqlstrb.="'".strE($val)."'";  
+        $sqlstrb.=',';   
+      }else{    
+        $sqlstr.=$key;    
+        $sqlstr.=',';   
+        $sqlstrb.="'".strE($val)."'";  
+        $sqlstrb.=',';   
+      }       
+    }else{   
+      $sqlstr.=$key;  
+      $sqlstr.=',';   
+      if($val==""){    
+        $sqlstrb.="0";   
+      }else{    
+        $sqlstrb.=$val;   
+      }   
+      $sqlstrb.=',';  	
+    } 
+  } 
 $sqlstr=substr($sqlstr,0,(strlen($sqlstr)-1));
-$sqlstrb=substr($sqlstrb,0,(strlen($sqlstrb)-1)); 	$sqlstr='('.$sqlstr.')'; 	$sqlstrb='('.$sqlstrb.')'; 	$sqlc=$sqlstr." VALUES ".$sqlstrb; 	$dbsql="insert into ".$dbArr["tableName"].$sqlc; 	$query=$dbsql; 	$dbArr["sqlDo"]=$query; 	if (dbExec($dbArr)){  	$dbArr["ts"]='操作成功';  	}else{  	$dbArr["ts"]='添加失败';  	} 	dbClose($dbArr);  	return $dbArr;
+$sqlstrb=substr($sqlstrb,0,(strlen($sqlstrb)-1)); 	
+  $sqlstr='('.$sqlstr.')'; 
+  $sqlstrb='('.$sqlstrb.')'; 
+  $sqlc=$sqlstr." VALUES ".$sqlstrb; 	
+  $dbsql="insert into ".$dbArr["tableName"].$sqlc; 
+  $query=$dbsql; 
+  $dbArr["sqlDo"]=$query; 
+  if (dbExec($dbArr)){ 
+    $dbArr["ts"]='操作成功';  
+  }else{  
+    $dbArr["ts"]='添加失败';  	
+  } 
+  dbClose($dbArr);  
+  return $dbArr;
 }
 ?>
